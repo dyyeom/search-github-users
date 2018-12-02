@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2ABAC140719327247224CF20 /* Pods_search_github_users.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17609618D3518A33742E991A /* Pods_search_github_users.framework */; };
+		9A7F969521B26AFC0042BA3F /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A7F969421B26AFC0042BA3F /* APIService.swift */; };
 		9A9A157821B2681F00425127 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9A157721B2681F00425127 /* AppDelegate.swift */; };
 		9A9A157A21B2681F00425127 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9A157921B2681F00425127 /* ViewController.swift */; };
 		9A9A157D21B2681F00425127 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A9A157B21B2681F00425127 /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* Begin PBXFileReference section */
 		17609618D3518A33742E991A /* Pods_search_github_users.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_search_github_users.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B88E4F7981A5539CFEC4828 /* Pods-search-github-users.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-search-github-users.debug.xcconfig"; path = "Pods/Target Support Files/Pods-search-github-users/Pods-search-github-users.debug.xcconfig"; sourceTree = "<group>"; };
+		9A7F969421B26AFC0042BA3F /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		9A9A157421B2681F00425127 /* search-github-users.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "search-github-users.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A9A157721B2681F00425127 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9A9A157921B2681F00425127 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				9A9A158321B2682100425127 /* LaunchScreen.storyboard */,
 				9A9A158621B2682200425127 /* Info.plist */,
 				9A9A157E21B2681F00425127 /* search_github_users.xcdatamodeld */,
+				9A7F969421B26AFC0042BA3F /* APIService.swift */,
 			);
 			path = "search-github-users";
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 			files = (
 				9A9A157A21B2681F00425127 /* ViewController.swift in Sources */,
 				9A9A158021B2681F00425127 /* search_github_users.xcdatamodeld in Sources */,
+				9A7F969521B26AFC0042BA3F /* APIService.swift in Sources */,
 				9A9A157821B2681F00425127 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
