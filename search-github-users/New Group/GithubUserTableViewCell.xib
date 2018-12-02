@@ -30,7 +30,7 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKe-4A-bJs">
+                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKe-4A-bJs">
                         <rect key="frame" x="315.5" y="40" width="19.5" height="19.5"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="WKe-4A-bJs" secondAttribute="height" multiplier="1:1" id="huk-Zs-hEi"/>

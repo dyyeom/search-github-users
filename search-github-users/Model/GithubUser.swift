@@ -6,14 +6,20 @@
 //  Copyright © 2018 blueprog. All rights reserved.
 //
 
-struct GithubUser: Codable {
-    var login: String?
-    var id: Int?
-    var avatarUrl: String?
+import RealmSwift
+
+class GithubUser: Object, Codable {
+    @objc var login: String?
+    @objc var id: Int = 0
+    @objc var avatarUrl: String?
     
     enum CodingKeys: String, CodingKey {
         case login
         case id
         case avatarUrl = "avatar_url"
+    }
+    
+    override static func primaryKey() -> String? {
+        return "id"
     }
 }

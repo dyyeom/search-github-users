@@ -6,7 +6,7 @@
 //  Copyright © 2018 blueprog. All rights reserved.
 //
 
-import UIKit
+import RealmSwift
 
 class GithubUserTableViewCell: UITableViewCell {
     @IBOutlet weak var avatarImageView: UIImageView!
@@ -20,7 +20,7 @@ class GithubUserTableViewCell: UITableViewCell {
         favoriteButton.setImage(UIImage(named: "fav_icon_off"), for: .normal)
     }
     
-    func setItem(item: GithubUserViewModel) {
+    func setItem(item: GithubUser) {
         avatarImageView.sd_setImage(with: URL(string: item.avatarUrl ?? ""))
         nameLabel.text = item.login
     }

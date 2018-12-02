@@ -8,6 +8,7 @@
 
 import SDWebImage
 import UIKit
+import RealmSwift
 
 class APIUsersTableViewController: UITableViewController {
     @IBOutlet weak var searchBar: UISearchBar!
@@ -15,9 +16,16 @@ class APIUsersTableViewController: UITableViewController {
     var users: GithubUsers?
     var keyword: String?
     var page: Int = 1
+    var realm: Realm!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        do {
+            realm = try Realm()
+        } catch {
+            print("\(error)")
+        }
         
         tableView.register(UINib(nibName: "GithubUserTableViewCell", bundle: nil), forCellReuseIdentifier: "GithubUserTableViewCell")
         
@@ -38,8 +46,8 @@ class APIUsersTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "GithubUserTableViewCell", for: indexPath) as! GithubUserTableViewCell
         if let item = users?.items?[indexPath.row] {
-            let viewItem = GithubUserViewModel(item: item)
-            cell.setItem(item: viewItem)
+            cell.setItem(item: item)
+            cell.favoriteButton.isHighlighted = realm.object(ofType: GithubUser.self, forPrimaryKey: item.id) != nil
         }
         if let tableDataCount = users?.items?.count, let keyword = self.keyword {
             if indexPath.row == tableDataCount - 1,
@@ -54,15 +62,16 @@ class APIUsersTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let item = users?.items?[indexPath.row] {
             let cell = self.tableView.cellForRow(at: indexPath) as! GithubUserTableViewCell
-            let isFavorited = cell.isHighlighted
-            if !isFavorited { // 즐겨찾기가 아직 안돼있음
-                
-            } else { // 즐겨찾기 가능
-                
+            var isFavorited = false
+            try! realm.write {
+                if let user = realm.object(ofType: GithubUser.self, forPrimaryKey: item.id) {
+                    realm.delete(user)
+                } else {
+                    realm.add(item)
+                    isFavorited = true
+                }
             }
-            // sqlite에 item 정보를 저장!
-            
-            cell.favoriteButton.isHighlighted = !isFavorited
+            cell.favoriteButton.isHighlighted = isFavorited
         }
     }
     

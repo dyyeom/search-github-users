@@ -15,7 +15,6 @@
 		9A7F96A021B27F9C0042BA3F /* GithubUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A7F969F21B27F9C0042BA3F /* GithubUsers.swift */; };
 		9A7F96A221B287650042BA3F /* GithubUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A7F96A121B287650042BA3F /* GithubUserTableViewCell.swift */; };
 		9A7F96A521B287870042BA3F /* GithubUserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A7F96A421B287870042BA3F /* GithubUserTableViewCell.xib */; };
-		9A7F96A821B2DDC50042BA3F /* GithubUserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A7F96A721B2DDC50042BA3F /* GithubUserViewModel.swift */; };
 		9A9A157821B2681F00425127 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9A157721B2681F00425127 /* AppDelegate.swift */; };
 		9A9A157D21B2681F00425127 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A9A157B21B2681F00425127 /* Main.storyboard */; };
 		9A9A158021B2681F00425127 /* search_github_users.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9A9A157E21B2681F00425127 /* search_github_users.xcdatamodeld */; };
@@ -33,7 +32,6 @@
 		9A7F969F21B27F9C0042BA3F /* GithubUsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubUsers.swift; sourceTree = "<group>"; };
 		9A7F96A121B287650042BA3F /* GithubUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubUserTableViewCell.swift; sourceTree = "<group>"; };
 		9A7F96A421B287870042BA3F /* GithubUserTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GithubUserTableViewCell.xib; sourceTree = "<group>"; };
-		9A7F96A721B2DDC50042BA3F /* GithubUserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubUserViewModel.swift; sourceTree = "<group>"; };
 		9A9A157421B2681F00425127 /* search-github-users.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "search-github-users.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A9A157721B2681F00425127 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9A9A157C21B2681F00425127 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -101,14 +99,6 @@
 			path = "New Group";
 			sourceTree = "<group>";
 		};
-		9A7F96A621B2DDB10042BA3F /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				9A7F96A721B2DDC50042BA3F /* GithubUserViewModel.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
 		9A9A156B21B2681F00425127 = {
 			isa = PBXGroup;
 			children = (
@@ -133,7 +123,6 @@
 				9A7F96A321B2876C0042BA3F /* Cell */,
 				9A7F969C21B2759B0042BA3F /* ViewController */,
 				9A7F969A21B2758C0042BA3F /* Model */,
-				9A7F96A621B2DDB10042BA3F /* ViewModel */,
 				9A9A157721B2681F00425127 /* AppDelegate.swift */,
 				9A9A157B21B2681F00425127 /* Main.storyboard */,
 				9A9A158121B2682100425127 /* Assets.xcassets */,
@@ -241,11 +230,15 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-search-github-users/Pods-search-github-users-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
+				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -268,7 +261,6 @@
 				9A7F96A221B287650042BA3F /* GithubUserTableViewCell.swift in Sources */,
 				9A7F969721B26DAD0042BA3F /* LocalUsersTableViewController.swift in Sources */,
 				9A9A157821B2681F00425127 /* AppDelegate.swift in Sources */,
-				9A7F96A821B2DDC50042BA3F /* GithubUserViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

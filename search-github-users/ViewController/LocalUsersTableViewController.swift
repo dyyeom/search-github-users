@@ -37,8 +37,7 @@ class LocalUsersTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "GithubUserTableViewCell", for: indexPath) as! GithubUserTableViewCell
         if let item = self.tableData?[indexPath.row] {
-            let viewItem = GithubUserViewModel(item: item)
-            cell.setItem(item: viewItem)
+            cell.setItem(item: item)
         }
         return cell
     }
