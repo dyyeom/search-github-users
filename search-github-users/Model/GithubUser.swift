@@ -9,9 +9,9 @@
 import RealmSwift
 
 class GithubUser: Object, Codable {
-    @objc var login: String?
-    @objc var id: Int = 0
-    @objc var avatarUrl: String?
+    @objc dynamic var login: String?
+    @objc dynamic var id: Int = 0
+    @objc dynamic var avatarUrl: String?
     
     enum CodingKeys: String, CodingKey {
         case login
