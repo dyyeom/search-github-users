@@ -21,7 +21,6 @@ class LocalUsersTableViewController: UIViewController, UITableViewDelegate {
     
     var disposeBag = DisposeBag()
     
-    var dataSource: RxTableViewSectionedReloadDataSource<SectionModel<String, GithubUser>>!
     var sections = BehaviorRelay(value: [SectionModel<String, GithubUser>]())
     var searchText: String?
     var realm: Realm!
@@ -41,7 +40,7 @@ class LocalUsersTableViewController: UIViewController, UITableViewDelegate {
         self.refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
         tableView.addSubview(self.refreshControl)
         
-        self.dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String, GithubUser>>(
+        let dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String, GithubUser>>(
             configureCell: { (_, tv, indexPath, element) in
                 let cell = tv.dequeueReusableCell(withIdentifier: "GithubUserTableViewCell") as! GithubUserTableViewCell
                 cell.setItem(item: element)
@@ -49,17 +48,17 @@ class LocalUsersTableViewController: UIViewController, UITableViewDelegate {
                 return cell
         },
             titleForHeaderInSection: { dataSource, sectionIndex in
-                return self.dataSource[sectionIndex].model
+                return dataSource[sectionIndex].model
         })
         
         self.sections.asObservable()
-            .bind(to: self.tableView.rx.items(dataSource: self.dataSource))
+            .bind(to: self.tableView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
         
         tableView.rx
             .itemSelected
             .map { indexPath in
-                return (indexPath, self.dataSource[indexPath])
+                return (indexPath, dataSource[indexPath])
             }
             .subscribe(onNext: { pair in
                 let item = self.sections.value[pair.0.section].items[pair.0.row]
