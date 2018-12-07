@@ -66,7 +66,7 @@
                             <outlet property="delegate" destination="BgN-hg-Api" id="gvR-ED-grt"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="API" id="14O-Sh-oJs"/>
+                    <tabBarItem key="tabBarItem" title="API" image="tabbar_icon_github" id="14O-Sh-oJs"/>
                     <connections>
                         <outlet property="searchBar" destination="X44-3f-QSL" id="Roy-Em-TMT"/>
                     </connections>
@@ -92,14 +92,11 @@
                                 <outlet property="delegate" destination="nfz-XW-Jd9" id="Lg8-YX-8V0"/>
                             </connections>
                         </searchBar>
-                        <connections>
-                            <outlet property="dataSource" destination="nfz-XW-Jd9" id="rPP-NJ-d1V"/>
-                            <outlet property="delegate" destination="nfz-XW-Jd9" id="zhO-Cd-CcZ"/>
-                        </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Local" id="Pe7-nt-CKl"/>
+                    <tabBarItem key="tabBarItem" title="Local" image="tabbar_icon_fav" id="Pe7-nt-CKl"/>
                     <connections>
                         <outlet property="searchBar" destination="HfL-Qu-FfK" id="iYp-em-xMQ"/>
+                        <outlet property="tableView" destination="eDP-5F-MQl" id="7Rr-br-eep"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gbH-JP-OFj" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -107,4 +104,8 @@
             <point key="canvasLocation" x="945" y="761"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="tabbar_icon_fav" width="30" height="29"/>
+        <image name="tabbar_icon_github" width="30" height="30"/>
+    </resources>
 </document>
