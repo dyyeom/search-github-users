@@ -61,14 +61,11 @@
                                 <outlet property="delegate" destination="BgN-hg-Api" id="p1a-hn-gUd"/>
                             </connections>
                         </searchBar>
-                        <connections>
-                            <outlet property="dataSource" destination="BgN-hg-Api" id="SjY-Rj-eem"/>
-                            <outlet property="delegate" destination="BgN-hg-Api" id="gvR-ED-grt"/>
-                        </connections>
                     </tableView>
                     <tabBarItem key="tabBarItem" title="API" image="tabbar_icon_github" id="14O-Sh-oJs"/>
                     <connections>
                         <outlet property="searchBar" destination="X44-3f-QSL" id="Roy-Em-TMT"/>
+                        <outlet property="tableView" destination="moZ-jh-tlC" id="LMi-2A-9JG"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sLp-cp-uas" userLabel="First Responder" sceneMemberID="firstResponder"/>
