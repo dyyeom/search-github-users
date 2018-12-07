@@ -22,4 +22,13 @@ class GithubUser: Object, Codable {
     override static func primaryKey() -> String? {
         return "id"
     }
+    
+    func copy() -> GithubUser {
+        let dest = GithubUser()
+        dest.login = self.login
+        dest.id = self.id
+        dest.avatarUrl = self.avatarUrl
+        
+        return dest
+    }
 }
