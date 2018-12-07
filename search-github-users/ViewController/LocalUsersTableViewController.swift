@@ -9,13 +9,21 @@
 import SDWebImage
 import UIKit
 import RealmSwift
+import RxCocoa
+import RxSwift
+import RxDataSources
 
-class LocalUsersTableViewController: UITableViewController {
+class LocalUsersTableViewController: UIViewController, UITableViewDelegate {
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    var sections: [Character] = []
-    var tableData: [GithubUser] = []
-    var keyword: String?
+    var refreshControl: UIRefreshControl!
+    
+    var disposeBag = DisposeBag()
+    
+    var dataSource: RxTableViewSectionedReloadDataSource<SectionModel<String, GithubUser>>!
+    var sections = BehaviorRelay(value: [SectionModel<String, GithubUser>]())
+    var searchText: String?
     var realm: Realm!
     
     override func viewDidLoad() {
@@ -29,85 +37,83 @@ class LocalUsersTableViewController: UITableViewController {
         
         tableView.register(UINib(nibName: "GithubUserTableViewCell", bundle: nil), forCellReuseIdentifier: "GithubUserTableViewCell")
         
-        refreshControl = UIRefreshControl()
-        guard let refreshControl = self.refreshControl else { return }
-        refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
-        tableView.addSubview(refreshControl)
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
+        tableView.addSubview(self.refreshControl)
         
-        requestGithubUser()
+        self.dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String, GithubUser>>(
+            configureCell: { (_, tv, indexPath, element) in
+                let cell = tv.dequeueReusableCell(withIdentifier: "GithubUserTableViewCell") as! GithubUserTableViewCell
+                cell.setItem(item: element)
+                cell.favoriteButton.isHighlighted = self.realm.object(ofType: GithubUser.self, forPrimaryKey: element.id) != nil
+                return cell
+        },
+            titleForHeaderInSection: { dataSource, sectionIndex in
+                return self.dataSource[sectionIndex].model
+        })
+        
+        self.sections.asObservable()
+            .bind(to: self.tableView.rx.items(dataSource: self.dataSource))
+            .disposed(by: disposeBag)
+        
+        tableView.rx
+            .itemSelected
+            .map { indexPath in
+                return (indexPath, self.dataSource[indexPath])
+            }
+            .subscribe(onNext: { pair in
+                let item = self.sections.value[pair.0.section].items[pair.0.row]
+                try! self.realm.write {
+                    if let user = self.realm.object(ofType: GithubUser.self, forPrimaryKey: item.id) {
+                        self.realm.delete(user)
+                    } else {
+                        self.realm.add(item.copy())
+                    }
+                }
+                self.loadSections()
+            })
+            .disposed(by: disposeBag)
+        
+        tableView.rx
+            .setDelegate(self)
+            .disposed(by: disposeBag)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        requestGithubUser()
+        loadSections()
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return self.sections.count
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.tableData.filter { $0.login?.capitalized.first! == self.sections[section] }.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "GithubUserTableViewCell", for: indexPath) as! GithubUserTableViewCell
-        
-        let item = self.tableData.filter { $0.login?.capitalized.first ?? "#" == self.sections[indexPath.section] }[indexPath.row]
-        cell.setItem(item: item)
-        cell.favoriteButton.isHighlighted = realm.object(ofType: GithubUser.self, forPrimaryKey: item.id) != nil
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return String(self.sections[section])
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = self.tableData.filter { $0.login?.capitalized.first ?? "#" == self.sections[indexPath.section] }[indexPath.row]
-        try! realm.write {
-            if let user = realm.object(ofType: GithubUser.self, forPrimaryKey: item.id) {
-                realm.delete(user)
-            } else {
-                realm.add(item.copy())
-            }
-        }
-    }
-
-    
-    func requestGithubUser(keyword: String = "") {
-        self.keyword = keyword
-        
+    func loadSections() {
         let users: [GithubUser]
-        if keyword.count > 0 {
-            users = Array(realm.objects(GithubUser.self).filter("login contains '\(keyword)'"))
+        if let searchText = searchText, searchText.count > 0 {
+            users = Array(realm.objects(GithubUser.self).filter("login contains '\(searchText)'"))
         } else {
             users = Array(realm.objects(GithubUser.self))
         }
+        let sortedUsers = users.sorted {
+            return $0.login?.localizedCaseInsensitiveCompare($1.login ?? "") == .orderedAscending
+        }
         
-        self.sections = Array(Set(users.map { $0.login?.capitalized.first ?? "#" })).sorted()
+        var models: [SectionModel<String, GithubUser>] = []
+        for section in Array(Set(users.map { String($0.login?.capitalized.first ?? "#") })).sorted() {
+            models.append(SectionModel(model: section, items: sortedUsers.filter { String($0.login?.capitalized.first ?? "#") == section }))
+        }
         
-        self.tableData = [GithubUser](users.sorted {
-            let name1 = $0.login ?? ""
-            let name2 = $1.login ?? ""
-            return name1.localizedCaseInsensitiveCompare(name2) == .orderedAscending
-        })
-        tableView.reloadData()
+        self.sections.accept(models)
         
-        guard let refreshControl = self.refreshControl else { return }
-        refreshControl.endRefreshing()
+        self.refreshControl?.endRefreshing()
     }
     
     @objc func refreshTableView() {
-        requestGithubUser(keyword: self.keyword ?? "")
+        loadSections()
     }
 }
 
 extension LocalUsersTableViewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let keyword = searchBar.text else { return }
-        self.keyword = keyword
-        self.requestGithubUser(keyword: keyword)
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.searchText = searchText
+        self.loadSections()
     }
 }
