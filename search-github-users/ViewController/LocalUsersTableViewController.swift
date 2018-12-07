@@ -33,6 +33,14 @@ class LocalUsersTableViewController: UITableViewController {
         guard let refreshControl = self.refreshControl else { return }
         refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
         tableView.addSubview(refreshControl)
+        
+        requestGithubUser()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        requestGithubUser()
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -58,21 +66,19 @@ class LocalUsersTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = self.tableData.filter { $0.login?.capitalized.first ?? "#" == self.sections[indexPath.section] }[indexPath.row]
-        let cell = self.tableView.cellForRow(at: indexPath) as! GithubUserTableViewCell
-        var isFavorited = false
         try! realm.write {
             if let user = realm.object(ofType: GithubUser.self, forPrimaryKey: item.id) {
                 realm.delete(user)
             } else {
-                realm.add(item)
-                isFavorited = true
+                realm.add(item.copy())
             }
         }
-        cell.favoriteButton.isHighlighted = isFavorited
     }
 
     
     func requestGithubUser(keyword: String = "") {
+        self.keyword = keyword
+        
         let users: [GithubUser]
         if keyword.count > 0 {
             users = Array(realm.objects(GithubUser.self).filter("login contains '\(keyword)'"))
@@ -82,16 +88,15 @@ class LocalUsersTableViewController: UITableViewController {
         
         self.sections = Array(Set(users.map { $0.login?.capitalized.first ?? "#" })).sorted()
         
-        self.tableData = users.sorted {
+        self.tableData = [GithubUser](users.sorted {
             let name1 = $0.login ?? ""
             let name2 = $1.login ?? ""
             return name1.localizedCaseInsensitiveCompare(name2) == .orderedAscending
-        }
+        })
         tableView.reloadData()
         
         guard let refreshControl = self.refreshControl else { return }
         refreshControl.endRefreshing()
-
     }
     
     @objc func refreshTableView() {

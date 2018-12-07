@@ -23,7 +23,6 @@ class APIUsersTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         do {
             realm = try Realm()
         } catch {
@@ -36,6 +35,12 @@ class APIUsersTableViewController: UITableViewController {
         guard let refreshControl = self.refreshControl else { return }
         refreshControl.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
         tableView.addSubview(refreshControl)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        tableView.reloadData()
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -68,7 +73,7 @@ class APIUsersTableViewController: UITableViewController {
             if let user = realm.object(ofType: GithubUser.self, forPrimaryKey: item.id) {
                 realm.delete(user)
             } else {
-                realm.add(item)
+                realm.add(item.copy())
                 isFavorited = true
             }
         }
@@ -92,11 +97,11 @@ class APIUsersTableViewController: UITableViewController {
                     if let items = self.users?.items {
                         self.sections = Array(Set(items.map { $0.login?.capitalized.first ?? "#" })).sorted()
                         
-                        self.tableData = items.sorted {
+                        self.tableData = [GithubUser](items.sorted {
                             let name1 = $0.login ?? ""
                             let name2 = $1.login ?? ""
                             return name1.localizedCaseInsensitiveCompare(name2) == .orderedAscending
-                        }
+                        })
                     }
                     self.tableView.reloadData()
                 } catch let error{
